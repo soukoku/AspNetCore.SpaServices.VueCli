@@ -10,6 +10,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Misc", "Misc", "{48BB5470-F
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNet31", "Samples\AspNet31\AspNet31.csproj", "{30CD74A6-38B1-4DFE-8783-11E5E12EF9F2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,6 +22,10 @@ Global
 		{B26CE940-8408-485B-9E5E-FCB9100A68A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B26CE940-8408-485B-9E5E-FCB9100A68A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B26CE940-8408-485B-9E5E-FCB9100A68A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30CD74A6-38B1-4DFE-8783-11E5E12EF9F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30CD74A6-38B1-4DFE-8783-11E5E12EF9F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30CD74A6-38B1-4DFE-8783-11E5E12EF9F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30CD74A6-38B1-4DFE-8783-11E5E12EF9F2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
