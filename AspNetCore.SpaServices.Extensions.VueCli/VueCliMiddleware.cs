@@ -13,7 +13,6 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Microsoft.AspNetCore.SpaServices.VueCli
@@ -77,11 +76,15 @@ IApplicationBuilder appBuilder, string sourcePath, string npmScriptName, string 
             //};
 
             var diagnosticSource = appBuilder.ApplicationServices.GetRequiredService<DiagnosticSource>();
+            
+#if NETCOREAPP2_1
+            var applicationStoppingToken = appBuilder.ApplicationServices.GetRequiredService<IApplicationLifetime>().ApplicationStopping;
+#else
             var applicationStoppingToken = appBuilder.ApplicationServices.GetRequiredService<IHostApplicationLifetime>().ApplicationStopping;
-
-            CancellationTokenSource cts = new CancellationTokenSource();
+#endif
             var npmScriptRunner = new NodeScriptRunner(
                 sourcePath, npmScriptName, $"--port {portNumber}", null, packageManager, diagnosticSource, applicationStoppingToken);
+
             npmScriptRunner.AttachToLogger(logger);
 
             using (var stdErrReader = new EventedStreamStringReader(npmScriptRunner.StdErr))
@@ -93,12 +96,12 @@ IApplicationBuilder appBuilder, string sourcePath, string npmScriptName, string 
                     // no compiler warnings. So instead of waiting for that, consider it ready as soon
                     // as it starts listening for requests.
                     await npmScriptRunner.StdOut.WaitForMatch(
-                        new Regex("Starting development server", RegexOptions.None, RegexMatchTimeout));
+                        new Regex("App running at", RegexOptions.None, RegexMatchTimeout));
                 }
                 catch (EndOfStreamException ex)
                 {
                     throw new InvalidOperationException(
-                        $"The NPM script '{npmScriptName}' exited without indicating that the " +
+                        $"The {packageManager} script '{npmScriptName}' exited without indicating that the " +
                         $"vue-cli-service server was listening for requests. The error output was: " +
                         $"{stdErrReader.ReadAsString()}", ex);
                 }
