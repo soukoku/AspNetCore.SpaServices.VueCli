@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30225.117
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetCore.SpaServices.Extensions.VueCli", "AspNetCore.SpaServices.Extensions.VueCli\AspNetCore.SpaServices.Extensions.VueCli.csproj", "{B26CE940-8408-485B-9E5E-FCB9100A68A0}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Misc", "Misc", "{48BB5470-F8F1-4198-9F8D-BD1722B49F6A}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
@@ -16,16 +14,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{9103
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNet21", "Samples\AspNet21\AspNet21.csproj", "{8FC05959-3C51-45AD-BFF3-5B7BFBF582D3}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Soukoku.AspNetCore.SpaServices.VueCli", "Soukoku.AspNetCore.SpaServices.VueCli\Soukoku.AspNetCore.SpaServices.VueCli.csproj", "{B0527C1F-6B0A-4B4A-9E24-F556D63ED950}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{B26CE940-8408-485B-9E5E-FCB9100A68A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B26CE940-8408-485B-9E5E-FCB9100A68A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B26CE940-8408-485B-9E5E-FCB9100A68A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B26CE940-8408-485B-9E5E-FCB9100A68A0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{30CD74A6-38B1-4DFE-8783-11E5E12EF9F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{30CD74A6-38B1-4DFE-8783-11E5E12EF9F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{30CD74A6-38B1-4DFE-8783-11E5E12EF9F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -34,6 +30,10 @@ Global
 		{8FC05959-3C51-45AD-BFF3-5B7BFBF582D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8FC05959-3C51-45AD-BFF3-5B7BFBF582D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8FC05959-3C51-45AD-BFF3-5B7BFBF582D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B0527C1F-6B0A-4B4A-9E24-F556D63ED950}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0527C1F-6B0A-4B4A-9E24-F556D63ED950}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0527C1F-6B0A-4B4A-9E24-F556D63ED950}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0527C1F-6B0A-4B4A-9E24-F556D63ED950}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\AspNetCore.SpaServices.Extensions.VueCli\AspNetCore.SpaServices.Extensions.VueCli.csproj" />
+    <ProjectReference Include="..\..\Soukoku.AspNetCore.SpaServices.VueCli\Soukoku.AspNetCore.SpaServices.VueCli.csproj" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

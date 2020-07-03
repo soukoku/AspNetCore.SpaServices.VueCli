@@ -21,6 +21,7 @@ namespace Microsoft.AspNetCore.SpaServices.VueCli
         /// </summary>
         /// <param name="spaBuilder">The <see cref="ISpaBuilder"/>.</param>
         /// <param name="npmScript">The name of the script in your package.json file that launches the vue-cli-service server.</param>
+        /// <param name="packageManager">The package manager command. "yarn" is recommended for vue.</param>
         public static void UseVueCli(
             this ISpaBuilder spaBuilder,
             string npmScript = "serve",

@@ -1,9 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <PackageId>Soukoku.AspNetCore.SpaServices.VueCli</PackageId>
     <Description>Helpers for building single-page applications on ASP.NET MVC Core with Vue CLI.</Description>
     <TargetFrameworks>netcoreapp2.1;netcoreapp3.1</TargetFrameworks>
+    <PackageProjectUrl>https://github.com/soukoku/AspNetCore.SpaServices.VueCli</PackageProjectUrl>
+    <PackageTags>vue vuecli aspnet spa</PackageTags>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <Authors>Soukoku</Authors>
     <Version>1.0.0</Version>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Release'">
