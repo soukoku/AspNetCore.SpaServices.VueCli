@@ -23,7 +23,8 @@ namespace Microsoft.AspNetCore.SpaServices.VueCli
         /// <param name="npmScript">The name of the script in your package.json file that launches the vue-cli-service server.</param>
         public static void UseVueCli(
             this ISpaBuilder spaBuilder,
-            string npmScript)
+            string npmScript = "serve",
+            string packageManager = "yarn")
         {
             if (spaBuilder == null)
             {
@@ -37,7 +38,7 @@ namespace Microsoft.AspNetCore.SpaServices.VueCli
                 throw new InvalidOperationException($"To use {nameof(UseVueCli)}, you must supply a non-empty value for the {nameof(SpaOptions.SourcePath)} property of {nameof(SpaOptions)} when calling {nameof(SpaApplicationBuilderExtensions.UseSpa)}.");
             }
 
-            VueCliMiddleware.Attach(spaBuilder, npmScript);
+            VueCliMiddleware.Attach(spaBuilder, npmScript, packageManager);
         }
     }
 }

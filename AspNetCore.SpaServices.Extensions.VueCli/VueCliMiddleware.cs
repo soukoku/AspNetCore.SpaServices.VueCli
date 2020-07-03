@@ -2,16 +2,19 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.NodeServices.Npm;
 using Microsoft.AspNetCore.NodeServices.Util;
-using Microsoft.AspNetCore.SpaServices.Util;
-using System;
-using System.IO;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.SpaServices.Extensions.Util;
+using Microsoft.AspNetCore.SpaServices.Util;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Diagnostics;
+using System.IO;
+using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Microsoft.AspNetCore.SpaServices.VueCli
 {
@@ -22,7 +25,8 @@ namespace Microsoft.AspNetCore.SpaServices.VueCli
 
         public static void Attach(
             ISpaBuilder spaBuilder,
-            string npmScriptName)
+            string npmScriptName,
+            string packageManager)
         {
             var sourcePath = spaBuilder.Options.SourcePath;
             if (string.IsNullOrEmpty(sourcePath))
@@ -38,7 +42,7 @@ namespace Microsoft.AspNetCore.SpaServices.VueCli
             // Start vue-cli-service and attach to middleware pipeline
             var appBuilder = spaBuilder.ApplicationBuilder;
             var logger = LoggerFinder.GetOrCreateLogger(appBuilder, LogCategoryName);
-            var portTask = StartServerAsync(sourcePath, npmScriptName, logger);
+            var portTask = StartServerAsync(appBuilder, sourcePath, npmScriptName, packageManager, logger);
 
             // Everything we proxy is hardcoded to target http://localhost because:
             // - the requests are always from the local machine (we're not accepting remote
@@ -61,18 +65,23 @@ namespace Microsoft.AspNetCore.SpaServices.VueCli
         }
 
         private static async Task<int> StartServerAsync(
-            string sourcePath, string npmScriptName, ILogger logger)
+IApplicationBuilder appBuilder, string sourcePath, string npmScriptName, string packageManager, ILogger logger)
         {
             var portNumber = TcpPortFinder.FindAvailablePort();
             logger.LogInformation($"Starting vue-cli-service server on port {portNumber}...");
 
-            var envVars = new Dictionary<string, string>
-            {
-                { "PORT", portNumber.ToString() },
-                { "BROWSER", "none" }, // We don't want vue-cli-service to open its own extra browser window pointing to the internal dev server port
-            };
-            var npmScriptRunner = new NpmScriptRunner(
-                sourcePath, npmScriptName, null, envVars);
+            //var envVars = new Dictionary<string, string>
+            //{
+            //    { "PORT", portNumber.ToString() },
+            //    { "BROWSER", "none" }, // We don't want vue-cli-service to open its own extra browser window pointing to the internal dev server port
+            //};
+
+            var diagnosticSource = appBuilder.ApplicationServices.GetRequiredService<DiagnosticSource>();
+            var applicationStoppingToken = appBuilder.ApplicationServices.GetRequiredService<IHostApplicationLifetime>().ApplicationStopping;
+
+            CancellationTokenSource cts = new CancellationTokenSource();
+            var npmScriptRunner = new NodeScriptRunner(
+                sourcePath, npmScriptName, $"--port {portNumber}", null, packageManager, diagnosticSource, applicationStoppingToken);
             npmScriptRunner.AttachToLogger(logger);
 
             using (var stdErrReader = new EventedStreamStringReader(npmScriptRunner.StdErr))
@@ -84,7 +93,7 @@ namespace Microsoft.AspNetCore.SpaServices.VueCli
                     // no compiler warnings. So instead of waiting for that, consider it ready as soon
                     // as it starts listening for requests.
                     await npmScriptRunner.StdOut.WaitForMatch(
-                        new Regex("Starting the development server", RegexOptions.None, RegexMatchTimeout));
+                        new Regex("Starting development server", RegexOptions.None, RegexMatchTimeout));
                 }
                 catch (EndOfStreamException ex)
                 {
