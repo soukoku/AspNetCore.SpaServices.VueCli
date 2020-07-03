@@ -11,8 +11,8 @@ implementation for react
 
 ## ASP.NET Project
 
-Install the `Soukoku.AspNetCore.SpaServices.VueCli` package with NuGet on the
-ASP.NET Core web project. Modify the `Startup.cs` file similar to the following.
+Install the `Soukoku.AspNetCore.SpaServices.VueCli` NuGet package on the
+ASP.NET Core web project, then modify the `Startup.cs` file similar to the following.
 
 
 ```cs
