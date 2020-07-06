@@ -1,6 +1,6 @@
 Provides support for [Vue CLI](https://cli.vuejs.org/) in ASP.net Core's SPA scenarios
-like the built-in support for react and angular. Only supported aspnet versions will
-be supported.
+like the built-in support for react and angular. Only supported aspnet versions since 2.1 
+will be supported.
 
 This is mostly copied and modified from ASP.net Core's
 implementation for react 
@@ -103,7 +103,10 @@ Change `SpaRoot` value to the actual vue project's folder name. Change yarn to n
 
 ```
 
-# Note
+# Notes
 
-To get hot-module-reloading to work both vue's dev server and aspnet's 
-site need to be on the same protocol for (http or https).
+* To get hot-module-reloading to work, both vue's dev server and aspnet's 
+site need to be on the same protocol (http or https).
+* Since dev server's progress is written to stderror there will be lots of "fail"s logged in dotnet. 
+To minimize this add `progress: false` to the `devServer` section in `vue.config.js` file. 
+See [this page](https://cli.vuejs.org/config/#devserver) on how to add it.
