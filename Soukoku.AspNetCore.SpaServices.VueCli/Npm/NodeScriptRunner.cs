@@ -155,7 +155,7 @@ namespace Microsoft.AspNetCore.NodeServices.Npm
         {
             if (_npmProcess != null && !_npmProcess.HasExited)
             {
-#if NETCOREAPP2_1
+#if NETCOREAPP2_1 || NETCOREAPP2_2 
                 _npmProcess.Kill();
 #else
                 _npmProcess.Kill(entireProcessTree: true);

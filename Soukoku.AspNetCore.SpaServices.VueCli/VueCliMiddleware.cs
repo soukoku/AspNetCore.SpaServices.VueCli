@@ -76,8 +76,8 @@ IApplicationBuilder appBuilder, string sourcePath, string npmScriptName, string 
             //};
 
             var diagnosticSource = appBuilder.ApplicationServices.GetRequiredService<DiagnosticSource>();
-            
-#if NETCOREAPP2_1
+
+#if NETCOREAPP2_1 || NETCOREAPP2_2
             var applicationStoppingToken = appBuilder.ApplicationServices.GetRequiredService<IApplicationLifetime>().ApplicationStopping;
 #else
             var applicationStoppingToken = appBuilder.ApplicationServices.GetRequiredService<IHostApplicationLifetime>().ApplicationStopping;
