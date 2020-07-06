@@ -1,6 +1,5 @@
-Provides support for [Vue CLI](https://cli.vuejs.org/) in ASP.net Core's SPA scenarios
-like the built-in support for react and angular. Only supported aspnet versions since 2.1 
-will be supported.
+Provides dev-time support for [Vue CLI](https://cli.vuejs.org/) in ASP.net Core's SPA scenarios. 
+Only aspnet versions since 2.1 will be supported.
 
 This is mostly copied and modified from ASP.net Core's
 implementation for react 
