@@ -41,15 +41,15 @@ namespace Microsoft.AspNetCore.SpaServices.VueCli
             // Start vue-cli-service and attach to middleware pipeline
             var appBuilder = spaBuilder.ApplicationBuilder;
             var logger = LoggerFinder.GetOrCreateLogger(appBuilder, LogCategoryName);
-            var portTask = StartServerAsync(appBuilder, sourcePath, npmScriptName, packageManager, logger);
+            var schemePortTask = StartServerAsync(appBuilder, sourcePath, npmScriptName, packageManager, logger);
 
             // Everything we proxy is hardcoded to target http://localhost because:
             // - the requests are always from the local machine (we're not accepting remote
             //   requests that go directly to the vue-cli-service server)
             // - given that, there's no reason to use https, and we couldn't even if we
             //   wanted to, because in general the vue-cli-service server has no certificate
-            var targetUriTask = portTask.ContinueWith(
-                task => new UriBuilder("http", "localhost", task.Result).Uri);
+            var targetUriTask = schemePortTask.ContinueWith(
+                task => new UriBuilder(task.Result.scheme, "localhost", task.Result.port).Uri);
 
             SpaProxyingExtensions.UseProxyToSpaDevelopmentServer(spaBuilder, () =>
             {
@@ -63,9 +63,10 @@ namespace Microsoft.AspNetCore.SpaServices.VueCli
             });
         }
 
-        private static async Task<int> StartServerAsync(
+        private static async Task<(string scheme, int port)> StartServerAsync(
 IApplicationBuilder appBuilder, string sourcePath, string npmScriptName, string packageManager, ILogger logger)
         {
+            var scheme = "http";
             var portNumber = TcpPortFinder.FindAvailablePort();
             logger.LogInformation($"Starting vue-cli-service server on port {portNumber}...");
 
@@ -97,6 +98,10 @@ IApplicationBuilder appBuilder, string sourcePath, string npmScriptName, string 
                     // as it starts listening for requests.
                     await npmScriptRunner.StdOut.WaitForMatch(
                         new Regex("App running at", RegexOptions.None, RegexMatchTimeout));
+
+                    string nextLine = await npmScriptRunner.StdOut.ReadLine();
+
+                    if (nextLine.Contains("https://")) scheme = "https";
                 }
                 catch (EndOfStreamException ex)
                 {
@@ -107,7 +112,7 @@ IApplicationBuilder appBuilder, string sourcePath, string npmScriptName, string 
                 }
             }
 
-            return portNumber;
+            return (scheme, portNumber);
         }
     }
 }

@@ -75,6 +75,45 @@ namespace Microsoft.AspNetCore.NodeServices.Util
             return tcs.Task;
         }
 
+
+        public Task<string> ReadLine()
+        {
+            var tcs = new TaskCompletionSource<string>();
+            var completionLock = new object();
+
+            OnReceivedLineHandler onReceivedLineHandler = null;
+            OnStreamClosedHandler onStreamClosedHandler = null;
+
+            void ResolveIfStillPending(Action applyResolution)
+            {
+                lock (completionLock)
+                {
+                    if (!tcs.Task.IsCompleted)
+                    {
+                        OnReceivedLine -= onReceivedLineHandler;
+                        OnStreamClosed -= onStreamClosedHandler;
+                        applyResolution();
+                    }
+                }
+            }
+
+            onReceivedLineHandler = line =>
+            {
+                ResolveIfStillPending(() => tcs.SetResult(line));
+            };
+
+            onStreamClosedHandler = () =>
+            {
+                ResolveIfStillPending(() => tcs.SetException(new EndOfStreamException()));
+            };
+
+            OnReceivedLine += onReceivedLineHandler;
+            OnStreamClosed += onStreamClosedHandler;
+
+            return tcs.Task;
+        }
+
+
         private async Task Run()
         {
             var buf = new char[8 * 1024];
