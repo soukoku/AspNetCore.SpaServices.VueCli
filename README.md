@@ -106,6 +106,8 @@ Change `SpaRoot` value to the actual vue project's folder name. Change yarn to n
 
 * To get hot-module-reloading to work, both vue's dev server and aspnet's 
 site need to be on the same protocol (http or https).
+* When using https in dev server, it needs to use a trusted certificate or
+aspnet will refuse to connect to it.
 * Since dev server's progress is written to stderror there will be lots of "fail"s logged in dotnet. 
 To minimize this add `progress: false` to the `devServer` section in `vue.config.js` file. 
 See [this page](https://cli.vuejs.org/config/#devserver) on how to add it.
