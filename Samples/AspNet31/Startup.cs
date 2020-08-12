@@ -30,7 +30,7 @@ namespace AspNet31
                 configuration.RootPath = "clientapp/dist";
             });
 
-            services.AddAntiforgery(op=>
+            services.AddAntiforgery(op =>
             {
                 //op.Cookie.Path = Envi
             });
@@ -52,8 +52,11 @@ namespace AspNet31
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseAntiforgeryScript();
             app.UseSpaStaticFiles();
+            app.UseAntiforgeryScript(op =>
+            {
+                op.AllowWhen = AntiforgeryScriptOptions.RequireAuthentication;
+            });
 
             app.UseRouting();
 

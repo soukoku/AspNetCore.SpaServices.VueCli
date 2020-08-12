@@ -1,47 +1,53 @@
 ﻿using Microsoft.AspNetCore.Antiforgery;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Options;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Net;
 using System.Text;
-using System.Text.Encodings.Web;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
-    class AntiforgeryMiddleware
+    class AntiforgeryScriptMiddleware
     {
-        private readonly IAntiforgery antiforgery;
-        private readonly IOptions<AntiforgeryOptions> options;
+        private readonly IAntiforgery _antiforgery;
+        private readonly IOptions<AntiforgeryOptions> _antiforgeryOptions;
+        private readonly IServiceProvider _serviceProvider;
+        private readonly AntiforgeryScriptOptions _scriptOptions;
 
-        public AntiforgeryMiddleware(RequestDelegate next,
-            IAntiforgery antiforgery, IOptions<AntiforgeryOptions> options)
+        public AntiforgeryScriptMiddleware(RequestDelegate _,
+            AntiforgeryScriptOptions scriptOptions,
+            IAntiforgery antiforgery,
+            IOptions<AntiforgeryOptions> options,
+            IServiceProvider serviceProvider)
         {
-            this.antiforgery = antiforgery;
-            this.options = options;
+            _scriptOptions = scriptOptions;
+            _antiforgery = antiforgery;
+            _antiforgeryOptions = options;
+            _serviceProvider = serviceProvider;
         }
 
         public async Task Invoke(HttpContext context)
         {
+            if (_scriptOptions.AllowWhen != null &&
+                !_scriptOptions.AllowWhen(context, _serviceProvider))
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                return;
+            }
             if (context.Request.Method != HttpMethods.Get)
             {
                 context.Response.StatusCode = (int)HttpStatusCode.MethodNotAllowed;
                 return;
             }
 
-            var tokenSet = antiforgery.GetTokens(context);
+            var tokenSet = _antiforgery.GetTokens(context);
 
             if (!string.IsNullOrEmpty(tokenSet.CookieToken))
             {
-                var cookieOp = options.Value.Cookie.Build(context);
-                context.Response.Cookies.Append(options.Value.Cookie.Name, tokenSet.CookieToken, cookieOp);
+                var cookieOp = _antiforgeryOptions.Value.Cookie.Build(context);
+                context.Response.Cookies.Append(_antiforgeryOptions.Value.Cookie.Name, tokenSet.CookieToken, cookieOp);
             }
             context.Response.ContentType = "application/javascript; charset=utf-8";
             context.Response.Headers["Cache-control"] = "no-store";
@@ -65,26 +71,6 @@ document.body.appendChild(input)
         static string GetOrigin(HttpRequest request)
         {
             return new Uri(request.GetDisplayUrl()).GetLeftPart(UriPartial.Authority);
-        }
-    }
-
-    /// <summary>
-    /// Extension methods for providing a virtual js with antiforgery token.
-    /// This is for use in SPA content.
-    /// </summary>
-    public static class AntiforgeryMiddlewareExtensions
-    {
-        /// <summary>
-        /// Enables the antiforgery script that will inject
-        /// the hidden token field in html body. This is highly experimental.
-        /// </summary>
-        /// <param name="builder"></param>
-        /// <returns></returns>
-        public static IApplicationBuilder UseAntiforgeryScript(
-            this IApplicationBuilder builder,
-            string path = "/js/antiforgery")
-        {
-            return builder.Map(path, app => app.UseMiddleware<AntiforgeryMiddleware>());
         }
     }
 }
