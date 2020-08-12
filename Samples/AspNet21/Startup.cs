@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.AspNetCore.SpaServices.VueCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,6 +26,7 @@ namespace AspNet21
             {
                 configuration.RootPath = "clientapp/dist";
             });
+            services.AddAntiforgery();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -42,6 +42,7 @@ namespace AspNet21
             }
 
             app.UseStaticFiles();
+            app.UseAntiforgeryScript();
             app.UseSpaStaticFiles();
 
             app.UseMvc(routes =>
@@ -50,7 +51,7 @@ namespace AspNet21
                     name: "default",
                     template: "{controller}/{action=Index}/{id?}");
             });
-
+            
             app.UseSpa(spa =>
             {
                 spa.Options.SourcePath = "clientapp";

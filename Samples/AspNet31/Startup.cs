@@ -29,6 +29,11 @@ namespace AspNet31
             {
                 configuration.RootPath = "clientapp/dist";
             });
+
+            services.AddAntiforgery(op=>
+            {
+                //op.Cookie.Path = Envi
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -47,6 +52,7 @@ namespace AspNet31
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseAntiforgeryScript();
             app.UseSpaStaticFiles();
 
             app.UseRouting();
