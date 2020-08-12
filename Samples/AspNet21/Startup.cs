@@ -42,8 +42,12 @@ namespace AspNet21
             }
 
             app.UseStaticFiles();
-            app.UseAntiforgeryScript();
             app.UseSpaStaticFiles();
+            app.UseAntiforgeryScript(op =>
+            {
+                //op.AllowWhen = AntiforgeryScriptOptions.RequireAuthentication;
+            });
+
 
             app.UseMvc(routes =>
             {

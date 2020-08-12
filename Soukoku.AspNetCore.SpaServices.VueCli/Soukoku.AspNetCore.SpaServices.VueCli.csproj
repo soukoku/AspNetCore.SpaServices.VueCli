@@ -2,9 +2,7 @@
 
   <PropertyGroup>
     <PackageId>Soukoku.AspNetCore.SpaServices.VueCli</PackageId>
-    <Description>
-      Provides dev-time support for Vue CLI in ASP.net Core's SPA scenarios.
-    </Description>
+    <Description>Provides dev-time support for Vue CLI and other utilities for SPA scenarios.</Description>
     <TargetFrameworks>netcoreapp2.1;netcoreapp2.2;netcoreapp3.1</TargetFrameworks>
     <PackageProjectUrl>https://github.com/soukoku/AspNetCore.SpaServices.VueCli</PackageProjectUrl>
     <PackageTags>vue vuecli aspnet spa</PackageTags>
