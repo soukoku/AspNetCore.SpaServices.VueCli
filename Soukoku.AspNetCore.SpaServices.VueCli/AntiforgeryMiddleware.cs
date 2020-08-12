@@ -1,12 +1,14 @@
 ﻿using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.RegularExpressions;
@@ -30,7 +32,7 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             if (context.Request.Method != HttpMethods.Get)
             {
-                context.Response.StatusCode = 404;
+                context.Response.StatusCode = (int)HttpStatusCode.MethodNotAllowed;
                 return;
             }
 
@@ -45,8 +47,24 @@ namespace Microsoft.Extensions.DependencyInjection
             context.Response.Headers["Cache-control"] = "no-store";
             context.Response.Headers["Pragma"] = "no-cache";
 
-            var script = $"window['{tokenSet.FormFieldName}']=(function(){{token='{tokenSet.RequestToken}';return {{get:function(){{return token}}}}}})();";
-            await context.Response.WriteAsync(script);
+            // writes the hidden token field if on a page with same origin as script
+            var bodyScript = $@"(function appendToken(){{
+if(window.location.origin==='{GetOrigin(context.Request)}'){{
+if(document.body){{
+var input = document.createElement('input')
+input.setAttribute('type', 'hidden')
+input.setAttribute('name', '{tokenSet.FormFieldName}')
+input.setAttribute('value', '{tokenSet.RequestToken}')
+document.body.appendChild(input)
+}}else{{window.requestAnimationFrame(appendToken)}}
+}}}})()";
+
+            await context.Response.WriteAsync(bodyScript, Encoding.UTF8);
+        }
+
+        static string GetOrigin(HttpRequest request)
+        {
+            return new Uri(request.GetDisplayUrl()).GetLeftPart(UriPartial.Authority);
         }
     }
 
@@ -57,7 +75,8 @@ namespace Microsoft.Extensions.DependencyInjection
     public static class AntiforgeryMiddlewareExtensions
     {
         /// <summary>
-        /// Enables the antiforgery script. This is highly experimental.
+        /// Enables the antiforgery script that will inject
+        /// the hidden token field in html body. This is highly experimental.
         /// </summary>
         /// <param name="builder"></param>
         /// <returns></returns>

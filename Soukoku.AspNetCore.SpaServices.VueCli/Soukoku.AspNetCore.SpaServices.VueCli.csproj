@@ -10,7 +10,7 @@
     <PackageTags>vue vuecli aspnet spa</PackageTags>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <Authors>Soukoku</Authors>
-    <Version>1.2.0</Version>
+    <Version>1.3.0</Version>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
   </PropertyGroup>
 
