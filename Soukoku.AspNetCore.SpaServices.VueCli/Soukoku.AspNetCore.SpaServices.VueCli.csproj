@@ -3,12 +3,12 @@
   <PropertyGroup>
     <PackageId>Soukoku.AspNetCore.SpaServices.VueCli</PackageId>
     <Description>Provides dev-time support for Vue CLI and other utilities for SPA scenarios.</Description>
-    <TargetFrameworks>netcoreapp2.1;netcoreapp2.2;netcoreapp3.1;net5.0</TargetFrameworks>
+    <TargetFrameworks>netcoreapp3.1;net6.0;net8.0</TargetFrameworks>
     <PackageProjectUrl>https://github.com/soukoku/AspNetCore.SpaServices.VueCli</PackageProjectUrl>
     <PackageTags>vue vuecli aspnet spa</PackageTags>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <Authors>Soukoku</Authors>
-    <Version>1.5.0</Version>
+    <Version>1.6.0</Version>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <RepositoryUrl>https://github.com/soukoku/AspNetCore.SpaServices.VueCli</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
@@ -27,17 +27,13 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All"/>
   </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)' == 'net5.0'">
-    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="[5.0.2,6)" />
+  <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
+    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="[8.0.11,9)" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
+    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="[6.0.36,7)" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
-    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="[3.1.7,5)" />
+    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="[3.1.32,5)" />
   </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.2'">
-    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="[2.2.0,3)" />
-  </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.1'">
-    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="[2.1.1,2.2)" />
-  </ItemGroup>
-
 </Project>
